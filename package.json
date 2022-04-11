@@ -1,0 +1,31 @@
+{
+  "name": "simple-node-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "npx env-cmd nodemon src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HoGentProjectenII/2022-node-gr10.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/HoGentProjectenII/2022-node-gr10/issues"
+  },
+  "homepage": "https://github.com/HoGentProjectenII/2022-node-gr10#readme",
+  "dependencies": {
+    "@koa/cors": "^3.3.0",
+    "@koa/router": "^10.1.1",
+    "config": "^3.3.7",
+    "env-cmd": "^10.1.0",
+    "koa": "^2.13.4",
+    "koa-bodyparser": "^4.3.0",
+    "winston": "^3.7.2"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
