@@ -3,7 +3,7 @@ const config = require('config');
 const koaCors = require('@koa/cors');
 const bodyParser = require('koa-bodyparser');
 const { initializeLogger, getLogger } = require('./core/logging');
-//const { initializeData, shutdownData } = require('./data');
+const { initializeData, shutdownData } = require('./data');
 const installRest = require('./rest');
 
 const NODE_ENV = config.get('env');
@@ -20,7 +20,7 @@ module.exports = async function createServer () {
 		defaultMeta: { NODE_ENV },
 	});
 	
-//	await initializeData();
+	await initializeData();
 
 	const app = new Koa();
 
@@ -60,7 +60,7 @@ module.exports = async function createServer () {
 
         async stop(){{
             app.removeAllListeners();
-            //await shutdownData();
+            await shutdownData();
             getLogger().info('Goodbye');
         }}
         }

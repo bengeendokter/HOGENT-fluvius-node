@@ -1,0 +1,33 @@
+
+const { getChildLogger } = require('../core/logging');
+const datasourceRepository = require('../repository/datasource.js');
+
+const debugLog = (message, meta = {}) => {
+	if (!this.logger) this.logger = getChildLogger('datasource-service');
+	this.logger.debug(message, meta);
+};
+
+/**
+ * Get all `limit` datasources, skip the first `offset`.
+ *
+ * @param {number} [limit] - Nr of datasources to fetch.
+ * @param {number} [offset] - Nr of datasources to skip.
+ */
+ const getAll = async (
+  limit = 100,
+  offset = 0,
+) => {
+  debugLog('Fetching all datasources', { limit, offset });
+  const data = await datasourceRepository.findAll({ limit, offset });
+  const totalCount = await datasourceRepository.findCount();
+  return {
+    data,
+    count: totalCount,
+    limit,
+    offset,
+  };
+};
+
+module.exports = {
+  getAll
+};
