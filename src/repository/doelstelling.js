@@ -8,14 +8,83 @@ const { getChildLogger } = require('../core/logging');
  * @param {number} pagination.limit - Nr of doelstellingen to return.
  * @param {number} pagination.offset - Nr of doelstellingen to skip.
  */
- const findAll = ({
+
+ const categorizedDoelstellingen = (doelstellingen) => {
+
+  doelstellingen = Object.values(doelstellingen.reduce((doelstellingenGrouped, {
+    DOELSTELLINGID,
+    Soort,
+    DOELWAARDE,
+    ICON,
+    JAAR,
+    NAAM,
+    PARENTCOMPONENT_DOELSTELLINGID,
+    SDGOAL_idSDG,
+    FORMULE_ID,
+    DATASOURCE_DATASOURCEID,
+  }) => {
+
+    if (Soort == "COMP") {
+      doelstellingenGrouped[DOELSTELLINGID] = {
+        id : DOELSTELLINGID,
+        Soort,
+        DOELWAARDE,
+        ICON,
+        JAAR,
+        NAAM,
+        PARENTCOMPONENT_DOELSTELLINGID,
+        SUBDOELSTELLINGEN : [],
+        SDGOAL_idSDG,
+        FORMULE_ID,
+      }
+    } else {
+      doelstellingenGrouped[DOELSTELLINGID] = {
+        id : DOELSTELLINGID,
+        Soort,
+        DOELWAARDE,
+        ICON,
+        JAAR,
+        NAAM,
+        PARENTCOMPONENT_DOELSTELLINGID,
+        SDGOAL_idSDG,
+        FORMULE_ID,
+        datasource : {
+          id : DATASOURCE_DATASOURCEID
+        }
+      }
+    }
+
+    return doelstellingenGrouped;
+  }, {}));
+
+  for (const d of doelstellingen) {
+
+      if (d.Soort === "LEAF") {
+        doelstellingen.find(e => e.id == d.PARENTCOMPONENT_DOELSTELLINGID)?.SUBDOELSTELLINGEN.push(d);
+      }  
+  }
+
+  for (const d of doelstellingen) {
+    if (d.Soort === "COMP") {
+      doelstellingen.find(e => e.id == d.PARENTCOMPONENT_DOELSTELLINGID)?.SUBDOELSTELLINGEN.push(d);
+    }
+}
+
+  doelstellingen = doelstellingen.filter(e => e.PARENTCOMPONENT_DOELSTELLINGID === null);
+
+  return doelstellingen;
+};
+
+ const findAll = async ({
   limit,
   offset,
 }) => {
-  return getKnex()(tables.doelstelling)
+  const doelstellingen = await getKnex()(tables.doelstelling)
     .select()
     .limit(limit)
     .offset(offset);
+
+  return doelstellingen && categorizedDoelstellingen(doelstellingen);
 };
 
 /**
