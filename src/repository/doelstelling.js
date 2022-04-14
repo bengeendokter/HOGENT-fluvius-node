@@ -59,6 +59,9 @@ const { getChildLogger } = require('../core/logging');
         },
         formule : {
           id : FORMULE_ID
+        },
+        datasource : {
+          id : DATASOURCE_DATASOURCEID
         }
       }
     }
