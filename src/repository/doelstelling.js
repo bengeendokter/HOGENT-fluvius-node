@@ -27,29 +27,38 @@ const { getChildLogger } = require('../core/logging');
     if (Soort == "COMP") {
       doelstellingenGrouped[DOELSTELLINGID] = {
         id : DOELSTELLINGID,
-        Soort,
-        DOELWAARDE,
-        ICON,
-        JAAR,
-        NAAM,
-        PARENTCOMPONENT_DOELSTELLINGID,
-        SUBDOELSTELLINGEN : [],
-        SDGOAL_idSDG,
-        FORMULE_ID,
+        soort : Soort,
+        doelwaarde : DOELWAARDE,
+        icon : ICON,
+        jaar: JAAR,
+        naam : NAAM,
+        parent_doelstelling : {
+          id : PARENTCOMPONENT_DOELSTELLINGID
+        },
+        sdg_goal : {
+          id : SDGOAL_idSDG
+        },
+        formule : {
+          id : FORMULE_ID
+        },
+        subdoelstellingen : [],
       }
     } else {
       doelstellingenGrouped[DOELSTELLINGID] = {
         id : DOELSTELLINGID,
-        Soort,
-        DOELWAARDE,
-        ICON,
-        JAAR,
-        NAAM,
-        PARENTCOMPONENT_DOELSTELLINGID,
-        SDGOAL_idSDG,
-        FORMULE_ID,
-        datasource : {
-          id : DATASOURCE_DATASOURCEID
+        soort : Soort,
+        doelwaarde : DOELWAARDE,
+        icon : ICON,
+        jaar: JAAR,
+        naam : NAAM,
+        parent_doelstelling : {
+          id : PARENTCOMPONENT_DOELSTELLINGID
+        },
+        sdg_goal : {
+          id : SDGOAL_idSDG
+        },
+        formule : {
+          id : FORMULE_ID
         }
       }
     }
@@ -59,18 +68,18 @@ const { getChildLogger } = require('../core/logging');
 
   for (const d of doelstellingen) {
 
-      if (d.Soort === "LEAF") {
-        doelstellingen.find(e => e.id == d.PARENTCOMPONENT_DOELSTELLINGID)?.SUBDOELSTELLINGEN.push(d);
+      if (d.soort === "LEAF") {
+        doelstellingen.find(e => e.id == d.parent_doelstelling.id)?.subdoelstellingen.push(d);
       }  
   }
 
   for (const d of doelstellingen) {
-    if (d.Soort === "COMP") {
-      doelstellingen.find(e => e.id == d.PARENTCOMPONENT_DOELSTELLINGID)?.SUBDOELSTELLINGEN.push(d);
+    if (d.soort === "COMP") {
+      doelstellingen.find(e => e.id == d.parent_doelstelling.id)?.subdoelstellingen.push(d);
     }
 }
 
-  doelstellingen = doelstellingen.filter(e => e.PARENTCOMPONENT_DOELSTELLINGID === null);
+  doelstellingen = doelstellingen.filter(e => e.parent_doelstelling.id === null);
 
   return doelstellingen;
 };
