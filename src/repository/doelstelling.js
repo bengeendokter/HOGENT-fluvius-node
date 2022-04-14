@@ -35,7 +35,7 @@ const findCount = async () => {
  */
  const findByRolId = (id) => {
   return getKnex()(tables.doelstelling)
-    .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_ROLID', id));
+    .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', id));
 };
 
 
