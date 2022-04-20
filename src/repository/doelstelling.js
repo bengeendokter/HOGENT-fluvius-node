@@ -110,18 +110,18 @@ const findCount = async () => {
 
 
 /**
- * Find doelstelingen with the given rol id.
+ * Find doelstelingen with the given rol naam.
  *
- * @param {string} id - The id to search for.
+ * @param {string} naam - The naam to search for.
  */
- const findByRolId = (id) => {
+ const findByRolNaam = (naam) => {
   return getKnex()(tables.doelstelling)
-    .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', id));
+    .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
 };
 
 
 module.exports = {
   findAll,
   findCount,
-  findByRolId
+  findByRolNaam
 };

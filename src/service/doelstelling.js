@@ -29,19 +29,19 @@ const debugLog = (message, meta = {}) => {
 };
 
 /**
- * Get the doelstellingen with the given rol id.
+ * Get the doelstellingen with the given rol naam.
  *
- * @param {string} id - Id of the rol to get.
+ * @param {string} naam - naam of the rol to get.
  *
  * @throws {ServiceError} One of:
- * - NOT_FOUND: No doelstellingen with the given rol id could be found.
+ * - NOT_FOUND: No doelstellingen with the given rol naam could be found.
  */
- const getByRolId = async (id) => {
-  debugLog(`Fetching doelstellingen with rol id ${id}`);
-  const doelstellingen = await doelstellingRepository.findByRolId(id);
+ const getByRolNaam = async (naam) => {
+  debugLog(`Fetching doelstellingen with rol naam ${naam}`);
+  const doelstellingen = await doelstellingRepository.findByRolNaam(naam);
 
   if (!doelstellingen) {
-    throw new Error(`No doelstellingen with rol id ${id} exists`, { id });
+    throw new Error(`No doelstellingen with rol naam ${naam} exists`, { naam });
   }
 
   return doelstellingen;
@@ -50,5 +50,5 @@ const debugLog = (message, meta = {}) => {
 
 module.exports = {
   getAll,
-  getByRolId
+  getByRolNaam
 };
