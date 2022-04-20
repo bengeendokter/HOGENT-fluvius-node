@@ -127,7 +127,7 @@ const findCount = async () => {
  */
  const findByCategorieId = (id) => {
   return getKnex()(tables.doelstelling)
-    .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID', 'Manager'));
+    .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id));
 };
 
 
