@@ -114,9 +114,10 @@ const findCount = async () => {
  *
  * @param {string} naam - The naam to search for.
  */
- const findByRolNaam = (naam) => {
-  return getKnex()(tables.doelstelling)
-    .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
+ const findByRolNaam = async (naam) => {
+  const doelstellingen = await getKnex()(tables.doelstelling)
+  .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
+  return categorizedDoelstellingen(doelstellingen);
 };
 
 
@@ -125,9 +126,10 @@ const findCount = async () => {
  *
  * @param {number} id - The id of the categorie.
  */
- const findByCategorieId = (id) => {
-  return getKnex()(tables.doelstelling)
-    .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id));
+ const findByCategorieId = async (id) => {
+  const doelstellingen = await getKnex()(tables.doelstelling)
+  .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id));
+  return categorizedDoelstellingen(doelstellingen);
 };
 
 
