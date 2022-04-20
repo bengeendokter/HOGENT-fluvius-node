@@ -11,7 +11,13 @@ const getAlldoelstellingen = async (ctx) => {
 };
 
 const getDoelstellingByRolId = async (ctx) => {
-  const doelstellingen = await doelstellingService.getByRolNaam(ctx.params.naam);
+  const doelstellingen = await doelstellingService.getByDoelstellingId(ctx.params.naam);
+  ctx.body = doelstellingen;
+};
+
+
+const getDoelstellingByCategorieId = async (ctx) => {
+  const doelstellingen = await doelstellingService.getByCategorieId(ctx.params.id);
   ctx.body = doelstellingen;
 };
 
@@ -28,6 +34,7 @@ const getDoelstellingByRolId = async (ctx) => {
 
   router.get('/', getAlldoelstellingen);
   router.get('/rol/:naam', getDoelstellingByRolId);
+  router.get('/categorie/:id', getDoelstellingByCategorieId);
 
   app
     .use(router.routes())

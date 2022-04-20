@@ -48,7 +48,29 @@ const debugLog = (message, meta = {}) => {
 };
 
 
+/**
+ * Get the doelstellingen with the given categorie id.
+ *
+ * @param {number} id - id of the categorie.
+ *
+ * @throws {ServiceError} One of:
+ * - NOT_FOUND: No doelstellingen with the given categorie id could be found.
+ */
+ const getByCategorieId = async (id) => {
+  debugLog(`Fetching doelstellingen with categorie id ${id}`);
+  const doelstellingen = await doelstellingRepository.findByCategorieId(id);
+
+  if (!doelstellingen) {
+    throw new Error(`No doelstellingen with categorie id ${id} exists`, { id });
+  }
+
+  return doelstellingen;
+};
+
+
+
 module.exports = {
   getAll,
-  getByRolNaam
+  getByRolNaam,
+  getByCategorieId
 };

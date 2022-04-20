@@ -120,8 +120,20 @@ const findCount = async () => {
 };
 
 
+/**
+ * Find doelstelingen with the given Categorie id.
+ *
+ * @param {number} id - The id of the categorie.
+ */
+ const findByCategorieId = (id) => {
+  return getKnex()(tables.doelstelling)
+    .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID', 'Manager'));
+};
+
+
 module.exports = {
   findAll,
   findCount,
-  findByRolNaam
+  findByRolNaam,
+  findByCategorieId
 };
