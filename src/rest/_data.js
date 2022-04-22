@@ -10,6 +10,11 @@ const getAllData = async (ctx) => {
   ctx.body = data;
 };
 
+const getDataByDoelstellingId = async (ctx) => {
+  const data = await dataService.getByDoelstellingId(ctx.params.id);
+  ctx.body = data;
+};
+
 /**
  * Install data routes in the given router.
  *
@@ -21,6 +26,7 @@ const getAllData = async (ctx) => {
   });
 
   router.get('/', getAllData);
+  router.get('/doelstelling/:id', getDataByDoelstellingId);
 
   app
     .use(router.routes())

@@ -27,7 +27,29 @@ const findCount = async () => {
   return count['count(*)'];
 };
 
+/**
+ * Find data with the given Doestelling id.
+ *
+ * @param {number} id - The id of the Doestelling.
+ */
+ const findByDoelstellingId = async (id) => {
+  const compData = await getKnex()(tables.componentData).where('COMPONENT_ID',id).select().orderBy('JAAR', 'desc').limit(1);
+
+  let data;
+  if(compData[0] != null)
+  {
+    data =
+    {
+      jaar : compData[0].JAAR,
+      data : await getKnex()(tables.data).where('id',compData[0].ID).select('value','name').orderBy('name', 'asc')
+    }
+  }
+  return data;
+};
+
+
 module.exports = {
   findAll,
   findCount,
+  findByDoelstellingId
 };

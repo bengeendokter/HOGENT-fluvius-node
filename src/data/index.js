@@ -142,7 +142,8 @@ const tables = {
   doelstelling_rol : 'mvodoelstelling_rol',
   rol : 'rol',
   datasource : 'datasource',
-  data : 'valueattributes'
+  data : 'valueattributes',
+  componentData : 'componentdata'
 };
 
 module.exports = {

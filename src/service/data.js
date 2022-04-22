@@ -28,6 +28,29 @@ const debugLog = (message, meta = {}) => {
   };
 };
 
+/**
+ * Get the data with the given doelstelling id.
+ *
+ * @param {number} id - id of the doelstelling.
+ *
+ * @throws {ServiceError} One of:
+ * - NOT_FOUND: No data with the given doelstelling id could be found.
+ */
+ const getByDoelstellingId = async (id) => {
+  debugLog(`Fetching data with doelstelling id ${id}`);
+  const data = await dataRepository.findByDoelstellingId(id);
+
+  if (!data) {
+    throw new Error(`No data with doelstelling id ${id} exists`, { id });
+  }
+
+  return data;
+};
+
+
+
+
 module.exports = {
-  getAll
+  getAll,
+  getByDoelstellingId
 };
