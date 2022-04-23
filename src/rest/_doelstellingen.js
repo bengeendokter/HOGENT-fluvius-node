@@ -21,6 +21,11 @@ const getDoelstellingByCategorieId = async (ctx) => {
   ctx.body = doelstellingen;
 };
 
+const getDoelstellingByCategorieIdAndRol = async (ctx) => {
+  const doelstellingen = await doelstellingService.getByCategorieIdAndRol(ctx.params.id, ctx.params.naam);
+  ctx.body = doelstellingen;
+};
+
 
 /**
  * Install doelstelling routes in the given router.
@@ -35,6 +40,7 @@ const getDoelstellingByCategorieId = async (ctx) => {
   router.get('/', getAlldoelstellingen);
   router.get('/rol/:naam', getDoelstellingByRolId);
   router.get('/categorie/:id', getDoelstellingByCategorieId);
+  router.get('/categorie/:id/rol/:naam', getDoelstellingByCategorieIdAndRol);
 
   app
     .use(router.routes())

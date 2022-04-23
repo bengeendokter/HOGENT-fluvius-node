@@ -143,7 +143,8 @@ const tables = {
   rol : 'rol',
   datasource : 'datasource',
   data : 'valueattributes',
-  componentData : 'componentdata'
+  componentData : 'componentdata',
+  formule : 'bewerking'
 };
 
 module.exports = {

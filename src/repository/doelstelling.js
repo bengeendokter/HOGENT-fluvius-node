@@ -9,7 +9,7 @@ const { getChildLogger } = require('../core/logging');
  * @param {number} pagination.offset - Nr of doelstellingen to skip.
  */
 
- const categorizedDoelstellingen = (doelstellingen) => {
+ const categorizedDoelstellingen = async (doelstellingen) => {
 
   doelstellingen = Object.values(doelstellingen.reduce((doelstellingenGrouped, {
     DOELSTELLINGID,
@@ -39,7 +39,8 @@ const { getChildLogger } = require('../core/logging');
           id : SDGOAL_idSDG
         },
         formule : {
-          id : FORMULE_ID
+          id : FORMULE_ID,
+          naam : ""
         },
         subdoelstellingen : [],
       }
@@ -58,7 +59,8 @@ const { getChildLogger } = require('../core/logging');
           id : SDGOAL_idSDG
         },
         formule : {
-          id : FORMULE_ID
+          id : FORMULE_ID,
+          naam : ""
         },
         datasource : {
           id : DATASOURCE_DATASOURCEID
@@ -83,9 +85,33 @@ const { getChildLogger } = require('../core/logging');
 }
 
   doelstellingen = doelstellingen.filter(e => e.parent_doelstelling.id === null);
+  await setFormuleNaam(doelstellingen);
 
   return doelstellingen;
 };
+
+const setFormuleNaam  = async (doelstellingen) =>
+{
+  console.log(doelstellingen.length);
+  for(let i = 0; i < doelstellingen.length; ++i)
+  {
+    console.log(doelstellingen[i].naam);
+    doelstellingen[i].formule.naam = await getFormuleNaam(doelstellingen[i].formule.id);
+    if(doelstellingen[i].subdoelstellingen != null)
+    {
+    
+      await setFormuleNaam(doelstellingen[i].subdoelstellingen);
+    }
+  }
+}
+
+const getFormuleNaam = async (id) =>
+{
+  const formule =  await getKnex()(tables.formule)
+  .where('ID', id).select('Soort');
+  
+  return formule[0].Soort;
+}
 
  const findAll = async ({
   limit,
@@ -133,9 +159,23 @@ const findCount = async () => {
 };
 
 
+/**
+ * Find doelstelingen with the given Categorie id and rol naam.
+ *
+ * @param {number} id - The id of the categorie.
+ * @param {string} naam - naam of the rol.
+ */
+ const findByCategorieIdAndRol = async (id, naam) => {
+  const doelstellingen = await getKnex()(tables.doelstelling)
+  .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id)).where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
+  return categorizedDoelstellingen(doelstellingen);
+};
+
+
 module.exports = {
   findAll,
   findCount,
   findByRolNaam,
-  findByCategorieId
+  findByCategorieId,
+  findByCategorieIdAndRol
 };
