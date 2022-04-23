@@ -48,8 +48,51 @@ const findCount = async () => {
 };
 
 
+/**
+ * Find data with the given Doestelling id.
+ *
+ * @param {number} id - The id of the Doestelling.
+ * @param {number} jaar - jaar of the data.
+ */
+ const findByDoelstellingIdAndYear = async (id,jaar) => {
+  const compData = await getKnex()(tables.componentData).where('COMPONENT_ID',id).where('JAAR',jaar).select().limit(1);
+
+  let data;
+  if(compData[0] != null)
+  {
+    data =
+    {
+      jaar : compData[0].JAAR,
+      data : await getKnex()(tables.data).where('id',compData[0].ID).select('value','name').orderBy('name', 'asc')
+    }
+  }
+  return data;
+};
+
+/**
+ * Find all data with the given Doestelling id.
+ *
+ * @param {number} id - The id of the Doestelling.
+ */
+ const findAllByDoelstellingId = async (id) => {
+  const compData = await getKnex()(tables.componentData).where('COMPONENT_ID',id).select().orderBy('JAAR', 'desc');
+
+  const data = [];
+  for(let i = 0; i < compData.length; i++)
+  {
+    data[i] =
+    {
+      jaar : compData[i].JAAR,
+      data : await getKnex()(tables.data).where('id',compData[i].ID).select('value','name').orderBy('name', 'asc')
+    }
+  }
+  return data;
+};
+
 module.exports = {
   findAll,
   findCount,
-  findByDoelstellingId
+  findByDoelstellingId,
+  findByDoelstellingIdAndYear,
+  findAllByDoelstellingId
 };

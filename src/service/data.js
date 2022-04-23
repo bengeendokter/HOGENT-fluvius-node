@@ -47,10 +47,49 @@ const debugLog = (message, meta = {}) => {
   return data;
 };
 
+/**
+ * Get the data with the given doelstelling id and year.
+ *
+ * @param {number} id - id of the doelstelling.
+ * @param {number} jaar - jaar of the data.
+ * @throws {ServiceError} One of:
+ * - NOT_FOUND: No data with the given doelstelling id or year could be found.
+ */
+ const getByDoelstellingIdAndYear = async (id,jaar) => {
+  debugLog(`Fetching data with doelstelling id ${id} and year ${jaar}`);
+  const data = await dataRepository.findByDoelstellingIdAndYear(id,jaar);
 
+  if (!data) {
+    throw new Error(`No data with doelstelling id ${id} or year ${jaar} exists`, { id });
+  }
+
+  return data;
+};
+
+
+/**
+ * Get all the data with the given doelstelling id.
+ *
+ * @param {number} id - id of the doelstelling.
+ *
+ * @throws {ServiceError} One of:
+ * - NOT_FOUND: No data with the given doelstelling id could be found.
+ */
+ const getAllByDoelstellingId = async (id) => {
+  debugLog(`Fetching all data with doelstelling id ${id}`);
+  const data = await dataRepository.findAllByDoelstellingId(id);
+
+  if (!data) {
+    throw new Error(`No data with doelstelling id ${id} exists`, { id });
+  }
+
+  return data;
+};
 
 
 module.exports = {
   getAll,
-  getByDoelstellingId
+  getByDoelstellingId,
+  getByDoelstellingIdAndYear,
+  getAllByDoelstellingId
 };
