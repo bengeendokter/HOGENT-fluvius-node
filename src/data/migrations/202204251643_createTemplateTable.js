@@ -4,12 +4,10 @@ module.exports = {
   up: async (knex) => {
     await knex.schema.createTable(tables.template, (table) => {
       table.uuid('id');
-        //.primary();
 
         table.integer('category_id')
         .notNullable();
       table.foreign('category_id', 'fk_template_categorie').references(`${tables.categorie}.CATEGORIEID`);
-     // table.primary('category_id')
        table.string('rol', 255)
         .notNullable();
       table.foreign('rol', 'fk_template_rol').references(`${tables.rol}.NAAM`);
