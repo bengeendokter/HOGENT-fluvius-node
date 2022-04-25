@@ -1,6 +1,44 @@
 const { tables, getKnex } = require('../data');
 const { getChildLogger } = require('../core/logging');
 
+const SELECT_COLUMNS = [
+  `${tables.doelstelling}.DOELSTELLINGID as id`, 
+  `${tables.doelstelling}.naam as naam`,
+  `${tables.data}.value as value`,
+  `${tables.componentData}.jaar as jaar`
+];
+
+const verdeelDataByDoelstelling = (data) => {
+  data = Object.values(data.reduce((dataGrouped, {
+    id,
+    naam,
+    jaar,
+    value
+  }) => {
+    if (!(id && naam in dataGrouped)) {
+      dataGrouped[naam] = {
+        id,
+        naam,
+        data : []
+      }
+    }
+
+    if (!dataGrouped[naam].data.some(d => Object.keys(d)[0] === jaar)){
+      dataGrouped[naam].data.push({[jaar] : []})
+    }
+    const index = dataGrouped[naam].data.findIndex(d => Object.keys(d)[0] === `${jaar}`);
+    if (index !== -1) {
+      dataGrouped[naam].data[index][`${jaar}`].push(value);
+    }
+
+    return dataGrouped
+  }, {}));
+  
+  data.forEach(d => d.data = d.data.filter(f => Object.values(f)[0].length !== 0));
+
+  return data
+}
+
 /**
  * Get all `limit` data, skip the first `offset`.
  *
@@ -8,14 +46,18 @@ const { getChildLogger } = require('../core/logging');
  * @param {number} pagination.limit - Nr of data to return.
  * @param {number} pagination.offset - Nr of data to skip.
  */
- const findAll = ({
+ const findAll = async ({
   limit,
   offset,
 }) => {
-  return getKnex()(tables.data)
-    .select()
+  const data = await getKnex()(`${tables.data}`)
+    .select(SELECT_COLUMNS)
+    .join(`${tables.componentData}`, `${tables.componentData}.ID`, `=`, `${tables.data}.id`)
+    .join(`${tables.doelstelling}`, `${tables.doelstelling}.DOELSTELLINGID`, `=`, `${tables.componentData}.COMPONENT_ID`)
     .limit(limit)
     .offset(offset);
+    
+    return data && verdeelDataByDoelstelling(data);
 };
 
 /**
