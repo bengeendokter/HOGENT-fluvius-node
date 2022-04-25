@@ -25,7 +25,25 @@ const getIsVisible = async (ctx) => {
   ctx.body = templates;
 };
 
+const createTemplate = async (ctx) => {
+  console.log(ctx.request.body);
+	const newTemplate = await templateService.create({
+		...ctx.request.body
+	});
+	ctx.body = newTemplate;
+	ctx.status=201;
+};
 
+const updateTemplate = async (ctx) => {
+	ctx.body = await templateService.updateById(ctx.params.id, {
+		...ctx.request.body
+	});
+};
+
+const deleteTemplate = async (ctx) => {
+	await templateService.deleteById(ctx.params.id);
+	ctx.status = 204;
+};
 
 /**
  * Install categorie routes in the given router.
@@ -40,6 +58,9 @@ const getIsVisible = async (ctx) => {
   router.get('/', getAllTemplates);
   router.get('/rol/:naam', getAllTemplatesByRol);
   router.get('/rol/:naam/categorie/:id', getIsVisible);
+  router.post('/', createTemplate);
+  router.put('/:id', updateTemplate);
+  router.delete('/:id', deleteTemplate);
 
   app
     .use(router.routes())

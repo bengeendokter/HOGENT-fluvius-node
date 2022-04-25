@@ -67,8 +67,58 @@ const debugLog = (message, meta = {}) => {
   return isVisible;
 };
 
+
+/**
+ * Create a new template
+ *
+ * @param {object} template - The template to create.
+ * @param {number} template.categoryId - id of category
+ * @param {string} template.rol - rol naam
+ * @param {boolean} template.isVisible - if category is visible
+ */
+ const create = async ({ categoryId, rol, isVisible}) => {
+	debugLog('Creating new template', {  categoryId, rol, isVisible});
+
+	return templateRepository.create({
+		categoryId,
+		rol,
+		isVisible,
+	});
+};
+
+/**
+ * Delete the template with the given `id`.
+ *
+ * @param {string} id - Id of the template to delete.
+ */
+ const deleteById = async (id) => {
+	debugLog(`Deleting template with id ${id}`);
+	await templateRepository.deleteById(id);
+};
+
+/**
+ * Update an existing template
+ *
+ * @param {string} id - Id of the template to update.
+ * @param {object} template - The template to create.
+ * @param {boolean} template.isVisible - if category is visible
+ */
+ const updateById = async (id, { isVisible}) => {
+	debugLog(`Updating template with id ${id}`, {
+		isVisible
+	});
+
+ 	return templateRepository.updateById(id, {
+		isVisible
+	});
+};
+
+
 module.exports = {
   getAll,
   getAllByRolNaam,
-  getIsVisible
+  getIsVisible,
+  create,
+  updateById,
+  deleteById
 };

@@ -1,3 +1,5 @@
+
+const uuid = require('uuid');
 const { tables, getKnex } = require('../data');
 const { getChildLogger } = require('../core/logging');
 
@@ -54,9 +56,122 @@ const findCount = async () => {
 };
 
 
+/**
+ * Find a template with the given `id`.
+ *
+ * @param {string} id - Id of the transaction to find.
+ */
+ const findById = async (id) => {
+  const template = await getKnex()(tables.template)
+    .first()
+    .where(`${tables.template}.id`, id);
+  
+  return template;
+};
+
+
+/**
+ * Create a new template.
+ *
+ * @param {object} template - The template to create.
+ * @param {number} template.categoryId - id of category
+ * @param {string} template.rol - rol naam
+ * @param {boolean} template.isVisible - if category is visible
+ *
+ * @returns {Promise<object>} Created template
+ */
+ const create = async ({
+  categoryId,
+  rol,
+  isVisible,
+}) => {
+
+  const exist = await findIsVisible(rol,categoryId);
+  if(exist === true || exist === false)
+  {
+    console.log(exist);
+    throw new Error(`A template for rol ${rol} with category id ${categoryId} already exists`);
+  }
+
+  try {
+    const id = uuid.v4();
+    await getKnex()(tables.template)
+      .insert({
+        id,
+        category_id : categoryId,
+        rol,
+        is_visible: isVisible
+      });
+    return await findById(id);
+  } catch (error) {
+    const logger = getChildLogger('template-repo');
+    logger.error('Error in create', {
+      error,
+    });
+    throw error;
+  }
+};
+
+
+
+
+/**
+ * Update an existing template.
+ *
+ * @param {string} id - Id of the template to update.
+ * @param {object} template - The template to create.
+ * @param {boolean} template.isVisible - if category is visible
+ *
+ * @returns {Promise<object>} Updated template/**
+
+ */
+ const updateById = async (id, {
+  isVisible
+}) => {
+  try {
+    await getKnex()(tables.template)
+      .update({
+        is_visible: isVisible
+      })
+      .where(`${tables.template}.id`, id);
+    return await findById(id);
+  } catch (error) {
+    const logger = getChildLogger('template-repo');
+    logger.error('Error in updateById', {
+      error,
+    });
+    throw error;
+  }
+};
+
+/**
+ * Delete a template with the given `id`.
+ *
+ * @param {string} id - Id of the template to delete.
+ *
+ * @returns {Promise<boolean>} Whether the template was deleted.
+ */
+ const deleteById = async (id) => {
+  try {
+    const rowsAffected = await getKnex()(tables.template)
+      .delete()
+      .where(`${tables.template}.id`, id);
+    return rowsAffected > 0;
+  } catch (error) {
+    const logger = getChildLogger('template-repo');
+    logger.error('Error in deleteById', {
+      error,
+    });
+    throw error;
+  }
+};
+
 module.exports = {
   findAll,
   findCount,
   findByRolNaam,
-  findIsVisible
+  findIsVisible,
+  create,
+  updateById,
+  deleteById
 };
