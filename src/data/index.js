@@ -144,7 +144,8 @@ const tables = {
   datasource : 'datasource',
   data : 'valueattributes',
   componentData : 'componentdata',
-  formule : 'bewerking'
+  formule : 'bewerking',
+  template : 'template'
 };
 
 module.exports = {
