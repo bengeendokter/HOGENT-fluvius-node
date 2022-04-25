@@ -4,6 +4,7 @@ const { getChildLogger } = require('../core/logging');
 const SELECT_COLUMNS = [
   `${tables.doelstelling}.DOELSTELLINGID as id`, 
   `${tables.doelstelling}.naam as naam`,
+  `${tables.doelstelling}.doelwaarde as doelwaarde`,
   `${tables.data}.value as value`,
   `${tables.componentData}.jaar as jaar`
 ];
@@ -13,12 +14,14 @@ const verdeelDataByDoelstelling = (data) => {
     id,
     naam,
     jaar,
-    value
+    value,
+    doelwaarde
   }) => {
     if (!(id && naam in dataGrouped)) {
       dataGrouped[naam] = {
         id,
         naam,
+        doelwaarde,
         data : []
       }
     }
