@@ -6,22 +6,56 @@ const SELECT_COLUMNS = [
   `${tables.doelstelling}.naam as naam`,
   `${tables.doelstelling}.doelwaarde as doelwaarde`,
   `${tables.data}.value as value`,
-  `${tables.componentData}.jaar as jaar`
+  `${tables.componentData}.jaar as jaar`,
+  `${tables.datasource}.MAAT as eenheid`
 ];
 
-const verdeelDataByDoelstelling = (data) => {
+const SELECT_COLUMNS_EENHEID = [
+  `${tables.doelstelling}.DOELSTELLINGID as id`,
+  `${tables.doelstelling}.Soort as soort`,
+  `${tables.datasource}.MAAT as eenheid`
+];
+
+const vindEenheidRecursief = async (id) => {
+  const resultaten = await getKnex()(tables.doelstelling)
+      .select(SELECT_COLUMNS_EENHEID)
+      .leftJoin(`${tables.datasource}`, `${tables.doelstelling}.DATASOURCE_DATASOURCEID`, `=`, `${tables.datasource}.DATASOURCEID`)
+      .where(`${tables.doelstelling}.PARENTCOMPONENT_DOELSTELLINGID`,id)
+  
+      if (resultaten.length !== 0) {
+        for (let i = 0; i < resultaten.length; i++) {
+
+          const doelstelling = resultaten[i];
+  
+          if (doelstelling && doelstelling.soort === "LEAF") {
+            return doelstelling.eenheid;
+          }
+  
+        }
+  
+        const index = resultaten.findIndex(d => d.soort === "COMP");
+        return resultaten[index] && vindEenheidRecursief(resultaten[index].id);
+        
+      } else {
+        return "onbekend";
+      }
+}
+
+const verdeelDataByDoelstelling = async (data) => {
   data = Object.values(data.reduce((dataGrouped, {
     id,
     naam,
     jaar,
     value,
-    doelwaarde
+    doelwaarde,
+    eenheid
   }) => {
     if (!(id && naam in dataGrouped)) {
       dataGrouped[naam] = {
         id,
         naam,
         doelwaarde,
+        eenheid,
         data : []
       }
     }
@@ -36,7 +70,14 @@ const verdeelDataByDoelstelling = (data) => {
 
     return dataGrouped
   }, {}));
-  
+
+  for (let i = 0; i < data.length; i++) {
+    if (data[i] && !data[i].eenheid) {
+      const result = await vindEenheidRecursief(data[i].id);
+      data[i].eenheid = result;
+    }
+  }
+
   data.forEach(d => d.data = d.data.filter(f => Object.values(f)[0].length !== 0));
 
   return data
@@ -57,6 +98,7 @@ const verdeelDataByDoelstelling = (data) => {
     .select(SELECT_COLUMNS)
     .join(`${tables.componentData}`, `${tables.componentData}.ID`, `=`, `${tables.data}.id`)
     .join(`${tables.doelstelling}`, `${tables.doelstelling}.DOELSTELLINGID`, `=`, `${tables.componentData}.COMPONENT_ID`)
+    .leftJoin(`${tables.datasource}`, `${tables.doelstelling}.DATASOURCE_DATASOURCEID`, `=`, `${tables.datasource}.DATASOURCEID`)
     .limit(limit)
     .offset(offset);
     
