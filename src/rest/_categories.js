@@ -10,6 +10,13 @@ const getAllCategories = async (ctx) => {
   ctx.body = categories;
 };
 
+const getCategoryById = async (ctx) => {
+  const categories = await categorieService.getById(
+    ctx.params.id
+  );
+  ctx.body = categories;
+};
+
 /**
  * Install categorie routes in the given router.
  *
@@ -21,6 +28,7 @@ const getAllCategories = async (ctx) => {
   });
 
   router.get('/', getAllCategories);
+  router.get('/:id', getCategoryById);
 
   app
     .use(router.routes())

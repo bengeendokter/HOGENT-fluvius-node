@@ -28,6 +28,20 @@ const debugLog = (message, meta = {}) => {
   };
 };
 
+
+/**
+ * Get category, by id.
+ *
+ * @param {number} [id] - id of category
+
+ */
+ const getById = async (id) => {
+  debugLog(`Fetching category with id ${id}`);
+  const category = await categorieRepository.findById(id);
+  return category;
+};
+
 module.exports = {
-  getAll
+  getAll,
+  getById
 };

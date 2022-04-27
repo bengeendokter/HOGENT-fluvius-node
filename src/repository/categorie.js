@@ -27,7 +27,21 @@ const findCount = async () => {
   return count['count(*)'];
 };
 
+/**
+ * Get category by id.
+ *
+ * @param {number} id - id of category
+ */
+ const findById = (id) => {
+  return getKnex()(tables.categorie)
+    .where("CATEGORIEID",id)
+    .select()
+    .limit(1)
+};
+
+
 module.exports = {
   findAll,
   findCount,
+  findById
 };
