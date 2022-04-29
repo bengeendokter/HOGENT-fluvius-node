@@ -126,16 +126,17 @@ const findCount = async () => {
 
  */
  const updateById = async (id, {
-  isVisible
+  category_id, rol, is_visible
 }) => {
   try {
     await getKnex()(tables.template)
       .update({
-        is_visible: isVisible
+        is_visible
       })
       .where(`${tables.template}.id`, id);
     return await findById(id);
   } catch (error) {
+    
     const logger = getChildLogger('template-repo');
     logger.error('Error in updateById', {
       error,

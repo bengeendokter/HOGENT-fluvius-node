@@ -103,13 +103,13 @@ const debugLog = (message, meta = {}) => {
  * @param {object} template - The template to create.
  * @param {boolean} template.isVisible - if category is visible
  */
- const updateById = async (id, { isVisible}) => {
+ const updateById = async (id, { category_id, rol, is_visible}) => {
 	debugLog(`Updating template with id ${id}`, {
-		isVisible
+		is_visible
 	});
 
  	return templateRepository.updateById(id, {
-		isVisible
+    category_id, rol, is_visible
 	});
 };
 

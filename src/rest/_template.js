@@ -37,7 +37,8 @@ const createTemplate = async (ctx) => {
 const updateTemplate = async (ctx) => {
 	ctx.body = await templateService.updateById(ctx.params.id, {
 		...ctx.request.body
-	});
+	}
+	);
 };
 
 const deleteTemplate = async (ctx) => {
