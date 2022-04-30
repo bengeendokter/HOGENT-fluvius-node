@@ -1,6 +1,22 @@
 const { tables, getKnex } = require('../data');
 const { getChildLogger } = require('../core/logging');
 
+const SELECT_COLUMNS = [
+  `${tables.doelstelling}.DOELSTELLINGID as doelID`,
+  `${tables.doelstelling}.Soort as soort`,
+  `${tables.doelstelling}.DOELWAARDE as doelwaarde`,
+  `${tables.doelstelling}.ICON as icon`,
+  `${tables.doelstelling}.JAAR as jaar`,
+  `${tables.doelstelling}.NAAM as doelNaam`,
+  `${tables.doelstelling}.PARENTCOMPONENT_DOELSTELLINGID as parentDoelstellingID`,
+  `${tables.doelstelling}.SDGOAL_idSDG as sdgID`,
+  `${tables.doelstelling}.FORMULE_ID as formuleID`,
+  `${tables.doelstelling}.DATASOURCE_DATASOURCEID as datasourceID`,
+  `${tables.categorie}.CATEGORIEID as categorieID`,
+  `${tables.categorie}.NAAM as categorieNaam`,
+  
+];
+
 /**
  * Get all `limit` doelstellingen, skip the first `offset`.
  *
@@ -12,58 +28,68 @@ const { getChildLogger } = require('../core/logging');
  const categorizedDoelstellingen = async (doelstellingen) => {
 
   doelstellingen = Object.values(doelstellingen.reduce((doelstellingenGrouped, {
-    DOELSTELLINGID,
-    Soort,
-    DOELWAARDE,
-    ICON,
-    JAAR,
-    NAAM,
-    PARENTCOMPONENT_DOELSTELLINGID,
-    SDGOAL_idSDG,
-    FORMULE_ID,
-    DATASOURCE_DATASOURCEID,
+    doelID,
+    soort,
+    doelwaarde,
+    icon,
+    jaar,
+    doelNaam,
+    parentDoelstellingID,
+    sdgID,
+    formuleID,
+    datasourceID,
+    categorieID,
+    categorieNaam
   }) => {
 
-    if (Soort == "COMP") {
-      doelstellingenGrouped[DOELSTELLINGID] = {
-        id : DOELSTELLINGID,
-        soort : Soort,
-        doelwaarde : DOELWAARDE,
-        icon : ICON,
-        jaar: JAAR,
-        naam : NAAM,
+    if (soort == "COMP") {
+      doelstellingenGrouped[doelID] = {
+        id : doelID,
+        soort,
+        doelwaarde,
+        icon,
+        jaar,
+        naam : doelNaam,
         parent_doelstelling : {
-          id : PARENTCOMPONENT_DOELSTELLINGID
+          id : parentDoelstellingID
         },
         sdg_goal : {
-          id : SDGOAL_idSDG
+          id : sdgID
         },
         formule : {
-          id : FORMULE_ID,
+          id : formuleID,
           naam : ""
+        },
+        categorie : {
+          id : categorieID,
+          naam : categorieNaam
         },
         subdoelstellingen : [],
       }
     } else {
-      doelstellingenGrouped[DOELSTELLINGID] = {
-        id : DOELSTELLINGID,
-        soort : Soort,
-        doelwaarde : DOELWAARDE,
-        icon : ICON,
-        jaar: JAAR,
-        naam : NAAM,
+      doelstellingenGrouped[doelID] = {
+        id : doelID,
+        soort,
+        doelwaarde,
+        icon,
+        jaar,
+        naam : doelNaam,
         parent_doelstelling : {
-          id : PARENTCOMPONENT_DOELSTELLINGID
+          id : parentDoelstellingID
         },
         sdg_goal : {
-          id : SDGOAL_idSDG
+          id : sdgID
         },
         formule : {
-          id : FORMULE_ID,
+          id : formuleID,
           naam : ""
         },
+        categorie : {
+          id : categorieID,
+          naam : categorieNaam
+        },
         datasource : {
-          id : DATASOURCE_DATASOURCEID
+          id : datasourceID
         }
       }
     }
@@ -92,10 +118,8 @@ const { getChildLogger } = require('../core/logging');
 
 const setFormuleNaam  = async (doelstellingen) =>
 {
-  console.log(doelstellingen.length);
   for(let i = 0; i < doelstellingen.length; ++i)
   {
-    console.log(doelstellingen[i].naam);
     doelstellingen[i].formule.naam = await getFormuleNaam(doelstellingen[i].formule.id);
     if(doelstellingen[i].subdoelstellingen != null)
     {
@@ -118,7 +142,9 @@ const getFormuleNaam = async (id) =>
   offset,
 }) => {
   const doelstellingen = await getKnex()(tables.doelstelling)
-    .select()
+    .select(SELECT_COLUMNS)
+    .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
+    .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
     .limit(limit)
     .offset(offset);
 
@@ -142,8 +168,12 @@ const findCount = async () => {
  */
  const findByRolNaam = async (naam) => {
   const doelstellingen = await getKnex()(tables.doelstelling)
+  .select(SELECT_COLUMNS)
+  .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
+  .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
   .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
-  return categorizedDoelstellingen(doelstellingen);
+  
+  return doelstellingen && categorizedDoelstellingen(doelstellingen);
 };
 
 
@@ -154,7 +184,11 @@ const findCount = async () => {
  */
  const findByCategorieId = async (id) => {
   const doelstellingen = await getKnex()(tables.doelstelling)
+  .select(SELECT_COLUMNS)
+  .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
+  .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
   .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id));
+
   return categorizedDoelstellingen(doelstellingen);
 };
 
@@ -167,7 +201,11 @@ const findCount = async () => {
  */
  const findByCategorieIdAndRol = async (id, naam) => {
   const doelstellingen = await getKnex()(tables.doelstelling)
+  .select(SELECT_COLUMNS)
+  .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
+  .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
   .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id)).where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
+  
   return categorizedDoelstellingen(doelstellingen);
 };
 
