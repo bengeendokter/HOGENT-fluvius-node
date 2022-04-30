@@ -118,10 +118,8 @@ const SELECT_COLUMNS = [
 
 const setFormuleNaam  = async (doelstellingen) =>
 {
-  console.log(doelstellingen.length);
   for(let i = 0; i < doelstellingen.length; ++i)
   {
-    console.log(doelstellingen[i].naam);
     doelstellingen[i].formule.naam = await getFormuleNaam(doelstellingen[i].formule.id);
     if(doelstellingen[i].subdoelstellingen != null)
     {
@@ -146,7 +144,7 @@ const getFormuleNaam = async (id) =>
   const doelstellingen = await getKnex()(tables.doelstelling)
     .select(SELECT_COLUMNS)
     .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
-    .join(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
+    .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
     .limit(limit)
     .offset(offset);
 
@@ -170,8 +168,12 @@ const findCount = async () => {
  */
  const findByRolNaam = async (naam) => {
   const doelstellingen = await getKnex()(tables.doelstelling)
+  .select(SELECT_COLUMNS)
+  .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
+  .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
   .where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
-  return categorizedDoelstellingen(doelstellingen);
+  
+  return doelstellingen && categorizedDoelstellingen(doelstellingen);
 };
 
 
@@ -182,7 +184,11 @@ const findCount = async () => {
  */
  const findByCategorieId = async (id) => {
   const doelstellingen = await getKnex()(tables.doelstelling)
+  .select(SELECT_COLUMNS)
+  .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
+  .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
   .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id));
+
   return categorizedDoelstellingen(doelstellingen);
 };
 
@@ -195,7 +201,11 @@ const findCount = async () => {
  */
  const findByCategorieIdAndRol = async (id, naam) => {
   const doelstellingen = await getKnex()(tables.doelstelling)
+  .select(SELECT_COLUMNS)
+  .leftJoin(`${tables.sdg}`, `${tables.doelstelling}.SDGOAL_idSDG`, `=`, `${tables.sdg}.idSDG`)
+  .leftJoin(`${tables.categorie}`, `${tables.sdg}.CATID`, `=`, `${tables.categorie}.CATEGORIEID`)
   .where('SDGOAL_idSDG', 'in', getKnex()(tables.sdg).select('idSDG').where('CATID',id)).where('doelstellingid', 'in', getKnex()(tables.doelstelling_rol).select('Component_DOELSTELLINGID').where('rollen_NAAM', naam));
+  
   return categorizedDoelstellingen(doelstellingen);
 };
 
