@@ -126,12 +126,14 @@ const findCount = async () => {
 
  */
  const updateById = async (id, {
-  category_id, rol, is_visible
+  category_id, rol, is_visible, order, is_costumisable
 }) => {
   try {
     await getKnex()(tables.template)
       .update({
-        is_visible
+        is_visible, 
+        order, 
+        is_costumisable
       })
       .where(`${tables.template}.id`, id);
     return await findById(id);
