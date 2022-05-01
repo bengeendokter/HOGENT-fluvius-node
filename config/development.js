@@ -22,8 +22,15 @@ module.exports = {
 		argon: {
 			saltLength: 16,
 			hashLength: 32,
-			timeCost: 6,
-			memoryCost: 2 **17
-		}
+			timeCost: 3,
+			memoryCost: 64 * 1024
+		},
+    jwt: {
+      secret: 'eenveeltemoeilijksecretdatniemandooitzalradenandersisdesitegehacked',
+      expirationInterval: 60 * 60 * 1000, // ms (1 hour)
+      issuer: 'mvo.fluvius.be',
+      audience: 'mvo.fluvius.be',
+    },
 	}
+	
 };

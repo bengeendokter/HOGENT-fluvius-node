@@ -24,6 +24,7 @@
     "argon2": "^0.28.5",
     "config": "^3.3.7",
     "env-cmd": "^10.1.0",
+    "jsonwebtoken": "^8.5.1",
     "knex": "^1.0.7",
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",

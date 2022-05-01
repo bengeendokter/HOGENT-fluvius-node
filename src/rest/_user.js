@@ -17,6 +17,16 @@ const getUserById = async (ctx) => {
   ctx.body = user;
 };
 
+const login = async (ctx) => {
+  const {GEBRUIKERSNAAM,WACHTWOORD} = ctx.request.body;
+  const response = await userService.login(
+    GEBRUIKERSNAAM,
+    WACHTWOORD
+  );
+  ctx.body = response;
+};
+
+
 /**
  * Install categorie routes in the given router.
  *
@@ -26,6 +36,8 @@ const getUserById = async (ctx) => {
   const router = new Router({
     prefix: '/users',
   });
+
+  router.post('/login', login);
 
   router.get('/', getAllUsers);
   router.get('/:id', getUserById);

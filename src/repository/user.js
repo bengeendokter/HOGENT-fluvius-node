@@ -39,9 +39,22 @@ const findCount = async () => {
     .limit(1)
 };
 
+/**
+ * Get user by name.
+ *
+ * @param {String} name - name of user
+ */
+ const findByName = (name) => {
+  return getKnex()(tables.user)
+    .where("GEBRUIKERSNAAM",name)
+    .first()
+};
+
+
 
 module.exports = {
   findAll,
   findCount,
-  findById
+  findById,
+  findByName
 };
