@@ -1,6 +1,7 @@
 
 const Router = require('@koa/router');
 const doelstellingService = require('../service/doelstelling.js');
+const { requireAuthentication} = require('../core/auth.js');
 
 const getAlldoelstellingen = async (ctx) => {
   const doelstellingen = await doelstellingService.getAll(
@@ -37,10 +38,10 @@ const getDoelstellingByCategorieIdAndRol = async (ctx) => {
     prefix: '/doelstellingen',
   });
 
-  router.get('/', getAlldoelstellingen);
-  router.get('/rol/:naam', getDoelstellingByRolId);
-  router.get('/categorie/:id', getDoelstellingByCategorieId);
-  router.get('/categorie/:id/rol/:naam', getDoelstellingByCategorieIdAndRol);
+  router.get('/',requireAuthentication, getAlldoelstellingen);
+  router.get('/rol/:naam',requireAuthentication, getDoelstellingByRolId);
+  router.get('/categorie/:id',requireAuthentication, getDoelstellingByCategorieId);
+  router.get('/categorie/:id/rol/:naam',requireAuthentication, getDoelstellingByCategorieIdAndRol);
 
   app
     .use(router.routes())

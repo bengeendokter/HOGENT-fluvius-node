@@ -105,8 +105,70 @@ const debugLog = (message, meta = {}) => {
   STATUS,
 });
 
+/**
+ * Check and parse a JWT from the given header into a valid session
+ * if possible.
+ *
+ * @param {string} authHeader - The bare 'Authorization' header to parse
+ *
+ * @throws {ServiceError} One of:
+ * - UNAUTHORIZED: Invalid JWT token provided, possible errors:
+ *   - no token provided
+ *   - incorrect 'Bearer' prefix
+ *   - expired JWT
+ *   - other unknown error
+ */
+ const checkAndParseSession = async (authHeader) => {
+  if (!authHeader) {
+    throw ServiceError.unauthorized('You need to be signed in');
+  }
+
+  if (!authHeader.startsWith('Bearer ')) {
+    throw ServiceError.unauthorized('Invalid authentication token');
+  }
+
+  const authToken = authHeader.substr(7);
+  try {
+    const {
+      roles, userId,
+    } = await verifyJWT(authToken);
+
+    return {
+      userId,
+      roles,
+      authToken,
+    };
+  } catch (error) {
+    const logger = getChildLogger('user-service');
+    logger.error(error.message, { error });
+    throw ServiceError.unauthorized(error.message);
+  }
+};
+
+/**
+ * Check if the given roles include the given required role.
+ *
+ * @param {string} role - Role to require.
+ * @param {string[]} roles - Roles of the user.
+ *
+ * @returns {void} Only throws if role not included.
+ *
+ * @throws {ServiceError} One of:
+ * - UNAUTHORIZED: Role not included in the array.
+ */
+ const checkRole = (role, roles) => {
+  const hasPermission = roles.includes(role);
+
+  if (!hasPermission) {
+    throw ServiceError.forbidden('You are not allowed to view this part of the application');
+  }
+};
+
+
 module.exports = {
   getAll,
   getById,
-  login
+  login,
+  checkAndParseSession,
+  checkRole,
 };

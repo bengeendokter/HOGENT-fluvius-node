@@ -1,6 +1,8 @@
 
 const Router = require('@koa/router');
 const userService = require('../service/user.js');
+const { requireAuthentication, makeRequireRole } = require('../core/auth.js');
+const Role = require('../core/roles.js');
 
 const getAllUsers = async (ctx) => {
   const users = await userService.getAll(
@@ -37,10 +39,12 @@ const login = async (ctx) => {
     prefix: '/users',
   });
 
+  const requireMvoCoordinator = makeRequireRole(Role.MVOCOORDINATOR);
+
   router.post('/login', login);
 
-  router.get('/', getAllUsers);
-  router.get('/:id', getUserById);
+  router.get('/',requireAuthentication,requireMvoCoordinator,  getAllUsers);
+  router.get('/:id',requireAuthentication,requireMvoCoordinator,  getUserById);
 
   app
     .use(router.routes())
