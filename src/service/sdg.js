@@ -8,7 +8,7 @@ const debugLog = (message, meta = {}) => {
 };
 
 /**
- * Get all `limit` categories, skip the first `offset`.
+ * Get all `limit` sdgs, skip the first `offset`.
  *
  * @param {number} [limit] - Nr of sdgs to fetch.
  * @param {number} [offset] - Nr of sdgs to skip.

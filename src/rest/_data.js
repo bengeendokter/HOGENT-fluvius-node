@@ -1,6 +1,7 @@
 
 const Router = require('@koa/router');
 const dataService = require('../service/data.js');
+const { requireAuthentication} = require('../core/auth.js');
 
 const getAllData = async (ctx) => {
   const data = await dataService.getAll(
@@ -35,10 +36,10 @@ const getAllDataByDoelstellingId = async (ctx) => {
     prefix: '/data',
   });
 
-  router.get('/', getAllData);
-  router.get('/doelstelling/:id', getDataByDoelstellingId);
-  router.get('/doelstelling/:id/:jaar', getDataByDoelstellingIdAndYear);
-  router.get('/all/doelstelling/:id', getAllDataByDoelstellingId);
+  router.get('/',requireAuthentication, getAllData);
+  router.get('/doelstelling/:id',requireAuthentication, getDataByDoelstellingId);
+  router.get('/doelstelling/:id/:jaar',requireAuthentication, getDataByDoelstellingIdAndYear);
+  router.get('/all/doelstelling/:id',requireAuthentication, getAllDataByDoelstellingId);
 
   app
     .use(router.routes())
