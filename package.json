@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "npx env-cmd nodemon src/index.js"
+    "start": "npx env-cmd nodemon src/index.js",
+    "test": "jest --verbose",
+    "test:coverage": "yarn test --coverage"
   },
   "repository": {
     "type": "git",
@@ -25,10 +27,12 @@
     "koa": "^2.13.4",
     "koa-bodyparser": "^4.3.0",
     "mysql2": "^2.3.3",
+    "supertest": "^6.2.3",
     "uuid": "^8.3.2",
     "winston": "^3.7.2"
   },
   "devDependencies": {
+    "jest": "^28.0.3",
     "nodemon": "^2.0.15"
   }
 }
