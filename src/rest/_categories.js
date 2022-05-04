@@ -28,7 +28,7 @@ const getCategoryById = async (ctx) => {
     prefix: '/categories',
   });
 
-  router.get('/',requireAuthentication, getAllCategories);
+  router.get('/', getAllCategories);
   router.get('/:id',requireAuthentication, getCategoryById);
 
   app

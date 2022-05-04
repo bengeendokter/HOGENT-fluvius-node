@@ -36,9 +36,9 @@ const getAllDataByDoelstellingId = async (ctx) => {
     prefix: '/data',
   });
 
-  router.get('/',requireAuthentication, getAllData);
-  router.get('/doelstelling/:id',requireAuthentication, getDataByDoelstellingId);
-  router.get('/doelstelling/:id/:jaar',requireAuthentication, getDataByDoelstellingIdAndYear);
+  router.get('/', getAllData);
+  router.get('/doelstelling/:id', getDataByDoelstellingId);
+  router.get('/doelstelling/:id/:jaar', getDataByDoelstellingIdAndYear);
   router.get('/all/doelstelling/:id',requireAuthentication, getAllDataByDoelstellingId);
 
   app

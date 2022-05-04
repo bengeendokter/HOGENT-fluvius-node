@@ -2,6 +2,7 @@
 const Router = require('@koa/router');
 const templateService = require('../service/template.js');
 const { requireAuthentication, makeRequireRole } = require('../core/auth.js');
+const Role = require('../core/roles.js');
 
 const getAllTemplates = async (ctx) => {
   const templates = await templateService.getAll(

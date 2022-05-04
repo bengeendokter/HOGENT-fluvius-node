@@ -38,9 +38,9 @@ const getDoelstellingByCategorieIdAndRol = async (ctx) => {
     prefix: '/doelstellingen',
   });
 
-  router.get('/',requireAuthentication, getAlldoelstellingen);
-  router.get('/rol/:naam',requireAuthentication, getDoelstellingByRolId);
-  router.get('/categorie/:id',requireAuthentication, getDoelstellingByCategorieId);
+  router.get('/', getAlldoelstellingen);
+  router.get('/rol/:naam', getDoelstellingByRolId);
+  router.get('/categorie/:id', getDoelstellingByCategorieId);
   router.get('/categorie/:id/rol/:naam',requireAuthentication, getDoelstellingByCategorieIdAndRol);
 
   app
