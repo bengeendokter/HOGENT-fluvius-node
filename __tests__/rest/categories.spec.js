@@ -1,6 +1,6 @@
 const supertest = require('supertest');
 const createServer = require('../../src/createServer');
-const { getKnex } = require('../../src/data');
+const { getKnex, tables  } = require('../../src/data');
 
 const data = {
 	categories: [{
@@ -55,15 +55,14 @@ describe('categories', ()=>{
 	const url = '/api/categories';
 
   describe('GET /api/categories', () => {
-
+		let knex;
     beforeAll(async () => {
+			knex = getKnex();
 			await knex(tables.categorie).insert(data.categories);
 		});
 
     afterAll(async () => {
-			await knex(tables.categorie)
-				.whereIn('CATEGORIEID', dataToDelete.categories)
-				.delete();
+			await knex(tables.categorie).whereIn('CATEGORIEID', dataToDelete.categories).delete();
 		});
 		
     it('should 200 and return all transactions', async () => {
@@ -71,7 +70,7 @@ describe('categories', ()=>{
 			expect(response.status).toBe(200);
 			expect(response.body.limit).toBe(100);
 			expect(response.body.offset).toBe(0);
-			expect(response.body.data.length).toBe(3);
+			expect(response.body.data.length).toBe(4);
     });
 			
 			

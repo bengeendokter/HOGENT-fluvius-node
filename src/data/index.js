@@ -6,6 +6,7 @@ const { getChildLogger } = require('../core/logging');
 
 const NODE_ENV = config.get('env');
 const isDevelopment = NODE_ENV === 'development';
+const isTest = NODE_ENV === 'test';
 
 const DATABASE_CLIENT = config.get('database.client');
 const DATABASE_NAME = config.get('database.name');
@@ -79,28 +80,30 @@ async function initializeData() {
   }
 
   // Run migrations
-  let migrationsFailed = true;
-  try {
-    await knexInstance.migrate.latest();
-    migrationsFailed = false;
-  } catch (error) {
-    logger.error('Error while migrating the database', {
-      error,
-    });
-  }
-
-  // Undo last migration if something failed
-  if (migrationsFailed) {
+  if (!isTest) {
+    let migrationsFailed = true;
     try {
-      await knexInstance.migrate.down();
+      await knexInstance.migrate.latest();
+      migrationsFailed = false;
     } catch (error) {
-      logger.error('Error while undoing last migration', {
+      logger.error('Error while migrating the database', {
         error,
       });
     }
 
-    // No point in starting the server
-    throw new Error('Migrations failed');
+    // Undo last migration if something failed
+    if (migrationsFailed) {
+      try {
+        await knexInstance.migrate.down();
+      } catch (error) {
+        logger.error('Error while undoing last migration', {
+          error,
+        });
+      }
+
+      // No point in starting the server
+      throw new Error('Migrations failed');
+    }
   }
 
   // Run seeds in development
