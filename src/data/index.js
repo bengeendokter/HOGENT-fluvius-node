@@ -1,6 +1,8 @@
+
+const { join } = require('path');
+
 const config = require('config');
 const knex = require('knex');
-const { join } = require('path');
 
 const { getChildLogger } = require('../core/logging');
 
