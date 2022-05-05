@@ -13,7 +13,7 @@ module.exports = {
 		port: 3306,
 		name: 'fluvius_test',
 		username: 'root',
-		password: 'root'
+		password: '32493249'
   	},
 	pagination: {
 		limit: 100,
