@@ -1,6 +1,7 @@
 
 const Router = require('@koa/router');
 const categorieService = require('../service/categorie.js');
+const { requireAuthentication} = require('../core/auth.js');
 
 const getAllCategories = async (ctx) => {
   const categories = await categorieService.getAll(
@@ -28,7 +29,7 @@ const getCategoryById = async (ctx) => {
   });
 
   router.get('/', getAllCategories);
-  router.get('/:id', getCategoryById);
+  router.get('/:id',requireAuthentication, getCategoryById);
 
   app
     .use(router.routes())

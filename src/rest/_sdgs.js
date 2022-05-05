@@ -2,6 +2,7 @@
 const Router = require('@koa/router');
 const { getLogger } = require('../core/logging.js');
 const sdgService = require('../service/sdg.js');
+const { requireAuthentication} = require('../core/auth.js');
 
 const getAllSdgs = async (ctx) => {
   const sdgs = await sdgService.getAll(
@@ -27,8 +28,8 @@ const getSdgsByCategorieId = async (ctx) => {
     prefix: '/sdgs',
   });
 
-  router.get('/', getAllSdgs);
-  router.get('/categorie/:id',getSdgsByCategorieId);
+  router.get('/',requireAuthentication, getAllSdgs);
+  router.get('/categorie/:id',requireAuthentication, getSdgsByCategorieId);
 
   app
     .use(router.routes())

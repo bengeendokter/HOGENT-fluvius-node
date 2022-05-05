@@ -1,6 +1,7 @@
 
 const Router = require('@koa/router');
 const rollenService = require('../service/rol.js');
+const { requireAuthentication} = require('../core/auth.js');
 
 const getAllRollen = async (ctx) => {
   const rollen = await rollenService.getAll(
@@ -20,7 +21,7 @@ const getAllRollen = async (ctx) => {
     prefix: '/rollen',
   });
 
-  router.get('/', getAllRollen);
+  router.get('/',requireAuthentication, getAllRollen);
 
   app
     .use(router.routes())

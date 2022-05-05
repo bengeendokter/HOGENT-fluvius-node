@@ -1,9 +1,11 @@
-const config = require('config');
-const knex = require('knex');
+
 const { join } = require('path');
 
-const { getChildLogger } = require('../core/logging');
+const config = require('config');
+const knex = require('knex');
 
+const { getChildLogger } = require('../core/logging');
+console.log(config);
 const NODE_ENV = config.get('env');
 const isDevelopment = NODE_ENV === 'development';
 const isTest = NODE_ENV === 'test';
@@ -148,7 +150,8 @@ const tables = {
   data : 'valueattributes',
   componentData : 'componentdata',
   formule : 'bewerking',
-  template : 'template'
+  template : 'template',
+  user : 'gebruiker'
 };
 
 module.exports = {

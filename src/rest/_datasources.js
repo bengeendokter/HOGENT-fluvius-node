@@ -1,6 +1,7 @@
 
 const Router = require('@koa/router');
 const datasourceService = require('../service/datasource.js');
+const { requireAuthentication} = require('../core/auth.js');
 
 const getAlldatasources = async (ctx) => {
   const datasources = await datasourceService.getAll(
@@ -20,7 +21,7 @@ const getAlldatasources = async (ctx) => {
     prefix: '/datasources',
   });
 
-  router.get('/', getAlldatasources);
+  router.get('/',requireAuthentication, getAlldatasources);
 
   app
     .use(router.routes())

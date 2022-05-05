@@ -6,6 +6,7 @@ const installRollenRouter = require('./_rollen.js');
 const installDatasourceRouter = require('./_datasources.js');
 const installDataRouter = require('./_data.js');
 const installTemplateRouter = require('./_template.js');
+const installUserRouter = require('./_user.js');
 
 /**
  * Install all routes in the given Koa application.
@@ -24,6 +25,7 @@ module.exports = (app) => {
 	installDatasourceRouter(router);
 	installDataRouter(router);
 	installTemplateRouter(router);
+	installUserRouter(router);
 
 	app.use(router.routes()).use(router.allowedMethods());
 };
