@@ -115,6 +115,8 @@ const SELECT_COLUMNS = [
   doelstellingen = doelstellingen.filter(e => e.parent_doelstelling.id === null);
   await setFormuleNaam(doelstellingen);
 
+  doelstellingen = doelstellingen.sort((a, b) => a.naam.localeCompare(b.naam));
+  console.log(doelstellingen);
   return doelstellingen;
 };
 
