@@ -1,4 +1,4 @@
-const supertest = require('supertest');
+/*const supertest = require('supertest');
 const createServer = require('../../src/createServer');
 const { getKnex, tables  } = require('../../src/data');
 
@@ -108,4 +108,4 @@ describe('mvodoelstellingen', ()=>{
         });
 
     });
-	});
+	});*/
