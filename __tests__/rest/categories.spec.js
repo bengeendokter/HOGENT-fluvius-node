@@ -63,7 +63,7 @@ describe('categories', ()=>{
 			await knex(tables.categorie).whereIn('CATEGORIEID', dataToDelete.categories).delete();
 		});
 		
-   test('should 200 and return all transactions', async () => {
+   test('should 200 and return all categories', async () => {
 			const response = await request.get(url).set('Authorization', loginHeader);
 			expect(response.status).toBe(200);
 			expect(response.body.limit).toBe(100);
@@ -71,7 +71,7 @@ describe('categories', ()=>{
 			expect(response.body.data.length).toBe(4);
     });
 			
-		test('it should 200 and paginate the list of transactions', async () => {
+		test('it should 200 and paginate the list of categories', async () => {
       const response = await request.get(`${url}?limit=2&offset=1`).set('Authorization', loginHeader);
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(2);
@@ -101,7 +101,7 @@ describe('categories', ()=>{
 			});
 
 
-			test('it should 200 and return the requested transaction', async () => {
+			test('it should 200 and return the requested categories', async () => {
 				const response = await request.get(`${url}/${1}`).set('Authorization', loginHeader);
 	
 				expect(response.status).toBe(200);
