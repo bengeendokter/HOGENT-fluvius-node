@@ -72,7 +72,7 @@ const SELECT_COLUMNS = [
         id : doelID,
         soort,
         doelwaarde,
-        isMax : Math.random() < 0.5,
+        isMax : true,//Math.random() < 0.5,
         icon,
         jaar,
         naam : doelNaam,
