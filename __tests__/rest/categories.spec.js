@@ -1,6 +1,6 @@
-const supertest = require('supertest');
-const createServer = require('../../src/createServer');
-const { getKnex, tables  } = require('../../src/data');
+
+const { tables  } = require('../../src/data');
+const { withServer, login } = require('../supertest.setup.js');
 
 const data = {
 	categories: [{
@@ -36,21 +36,19 @@ const dataToDelete = {
 }
 
 describe('categories', ()=>{
-	let server;
 	let request;
 	let knex;
+	let loginHeader;
+
+	withServer(({ knex: k, supertest:s }) => {
+		knex = k;
+		request = s;
+	});
 
 	beforeAll(async () => {
-		server = await createServer();
-		request = supertest(server.getApp().callback());
-    knex = getKnex();
+		loginHeader = await login(request);
 	})
 
-	
-  afterAll(async () => {
-		await server.stop();
-	});
-	
 
 	const url = '/api/categories';
 
@@ -65,16 +63,16 @@ describe('categories', ()=>{
 			await knex(tables.categorie).whereIn('CATEGORIEID', dataToDelete.categories).delete();
 		});
 		
-   test('should 200 and return all transactions', async () => {
-			const response = await request.get(url);
+   test('should 200 and return all categories', async () => {
+			const response = await request.get(url).set('Authorization', loginHeader);
 			expect(response.status).toBe(200);
 			expect(response.body.limit).toBe(100);
 			expect(response.body.offset).toBe(0);
 			expect(response.body.data.length).toBe(4);
     });
 			
-		test('it should 200 and paginate the list of transactions', async () => {
-      const response = await request.get(`${url}?limit=2&offset=1`);
+		test('it should 200 and paginate the list of categories', async () => {
+      const response = await request.get(`${url}?limit=2&offset=1`).set('Authorization', loginHeader);
       expect(response.status).toBe(200);
       expect(response.body.data.length).toBe(2);
       expect(response.body.limit).toBe(2);
@@ -92,7 +90,7 @@ describe('categories', ()=>{
     });
   });
 			
-		describe('GET /api/categories/:id', () => {
+	describe('GET /api/categories/:id', () => {
 			beforeAll(async () => {
 	
 				await knex(tables.categorie).insert(data.categories);
@@ -103,8 +101,8 @@ describe('categories', ()=>{
 			});
 
 
-			test('it should 200 and return the requested transaction', async () => {
-				const response = await request.get(`${url}/${1}`)
+			test('it should 200 and return the requested categories', async () => {
+				const response = await request.get(`${url}/${1}`).set('Authorization', loginHeader);
 	
 				expect(response.status).toBe(200);
 				expect(response.body[0]).toEqual({

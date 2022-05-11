@@ -12,7 +12,7 @@ const getAlldoelstellingen = async (ctx) => {
 };
 
 const getDoelstellingByRolId = async (ctx) => {
-  const doelstellingen = await doelstellingService.getByDoelstellingId(ctx.params.naam);
+  const doelstellingen = await doelstellingService.getByRolNaam(ctx.params.naam);
   ctx.body = doelstellingen;
 };
 
