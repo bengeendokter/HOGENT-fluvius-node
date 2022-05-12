@@ -100,7 +100,8 @@ const verdeelDataByDoelstelling = async (data) => {
     .join(`${tables.doelstelling}`, `${tables.doelstelling}.DOELSTELLINGID`, `=`, `${tables.componentData}.COMPONENT_ID`)
     .leftJoin(`${tables.datasource}`, `${tables.doelstelling}.DATASOURCE_DATASOURCEID`, `=`, `${tables.datasource}.DATASOURCEID`)
     .limit(limit)
-    .offset(offset);
+    .offset(offset)
+    .orderBy('JAAR', 'asc');
     
     return data && verdeelDataByDoelstelling(data);
 };
