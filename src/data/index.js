@@ -140,19 +140,41 @@ function getKnex() {
   return knexInstance;
 }
 
-const tables = {
-  categorie: 'categorie',
-  sdg : 'sdg',
-  doelstelling : 'mvodoelstelling',
-  doelstelling_rol : 'mvodoelstelling_rol',
-  rol : 'rol',
-  datasource : 'datasource',
-  data : 'valueattributes',
-  componentData : 'componentdata',
-  formule : 'bewerking',
-  template : 'template',
-  user : 'gebruiker'
-};
+let tempTables;
+if(isDevelopment)
+{
+  tempTables = {
+    categorie: 'Categorie',
+    sdg : 'Sdg',
+    doelstelling : 'Mvodoelstelling',
+    doelstelling_rol : 'Mvodoelstelling_rol',
+    rol : 'Rol',
+    datasource : 'Datasource',
+    data : 'Valueattributes',
+    componentData : 'Componentdata',
+    formule : 'Bewerking',
+    template : 'Template',
+    user : 'Gebruiker'
+  };
+}
+else{
+  tempTables = {
+    categorie: 'categorie',
+    sdg : 'sdg',
+    doelstelling : 'mvodoelstelling',
+    doelstelling_rol : 'mvodoelstelling_rol',
+    rol : 'rol',
+    datasource : 'datasource',
+    data : 'valueattributes',
+    componentData : 'componentdata',
+    formule : 'bewerking',
+    template : 'template',
+    user : 'gebruiker'
+  };
+}
+
+
+const tables = tempTables;
 
 module.exports = {
   tables,
