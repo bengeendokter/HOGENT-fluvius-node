@@ -10,9 +10,9 @@ module.exports = {
 	},
 	database: {
     client: 'mysql2',
-    host: 'localhost',
+    host: 'ID372119_g10.db.webhosting.be',
     port: 3306,
-    name: 'fluvius',
+    name: 'ID372119_g10',
   },
 	pagination: {
     limit: 100,
