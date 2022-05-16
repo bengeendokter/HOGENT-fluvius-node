@@ -8,6 +8,7 @@ const { getChildLogger } = require('../core/logging');
 console.log(config);
 const NODE_ENV = config.get('env');
 const isDevelopment = NODE_ENV === 'development';
+const isProduction = NODE_ENV === 'production';
 const isTest = NODE_ENV === 'test';
 
 const DATABASE_CLIENT = config.get('database.client');
@@ -141,7 +142,7 @@ function getKnex() {
 }
 
 let tempTables;
-if(isDevelopment)
+if(isProduction)
 {
   tempTables = {
     categorie: 'Categorie',
