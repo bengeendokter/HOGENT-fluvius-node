@@ -27,5 +27,7 @@ module.exports = (app) => {
 	installTemplateRouter(router);
 	installUserRouter(router);
 
+	router.get('/', ctx => {ctx.body = '<h1>Dit is de MVO Fluvius API van groep 10</h1>'});
+
 	app.use(router.routes()).use(router.allowedMethods());
 };
