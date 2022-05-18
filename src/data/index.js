@@ -146,15 +146,15 @@ if(isProduction)
 {
   tempTables = {
     categorie: 'Categorie',
-    sdg : 'Sdg',
-    doelstelling : 'Mvodoelstelling',
-    doelstelling_rol : 'Mvodoelstelling_rol',
+    sdg : 'SDG',
+    doelstelling : 'MVODoelstelling',
+    doelstelling_rol : 'MVODoelstelling_Rol',
     rol : 'Rol',
-    datasource : 'Datasource',
-    data : 'Valueattributes',
-    componentData : 'Componentdata',
+    datasource : 'DataSource',
+    data : 'valueattributes',
+    componentData : 'COMPONENTDATA',
     formule : 'Bewerking',
-    template : 'Template',
+    template : 'template',
     user : 'Gebruiker'
   };
 }
