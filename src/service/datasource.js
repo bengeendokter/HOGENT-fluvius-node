@@ -40,7 +40,7 @@ const debugLog = (message, meta = {}) => {
 		CORRUPT
 	});
 
- 	return templateRepository.updateById(id, {
+ 	return datasourceRepository.updateById(id, {
     CORRUPT
 	});
 };

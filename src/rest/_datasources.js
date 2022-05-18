@@ -13,7 +13,7 @@ const getAlldatasources = async (ctx) => {
 
 
 const updateDatasource = async (ctx) => {
-	ctx.body = await templateService.updateById(ctx.params.id, {
+	ctx.body = await datasourceService.updateById(ctx.params.id, {
 		...ctx.request.body
 	}
 	);

@@ -59,7 +59,7 @@ const findCount = async () => {
 /**
  * Find a template with the given `id`.
  *
- * @param {string} id - Id of the transaction to find.
+ * @param {string} id - Id of the template to find.
  */
  const findById = async (id) => {
   const template = await getKnex()(tables.template)

@@ -27,6 +27,21 @@ const findCount = async () => {
   return count['count(*)'];
 };
 
+
+/**
+ * Find a datasource with the given `id`.
+ *
+ * @param {string} id - Id of the datasource to find.
+ */
+ const findById = async (id) => {
+  const datasource = await getKnex()(tables.datasource)
+    .first()
+    .where(`${tables.datasource}.DATASOURCEID`, id);
+  
+  return datasource;
+};
+
+
 /**
  * Update an existing datasource.
  *
@@ -45,7 +60,7 @@ const findCount = async () => {
       .update({
         CORRUPT
       })
-      .where(`${tables.datasource}.id`, id);
+      .where(`${tables.datasource}.DATASOURCEID`, id);
     return await findById(id);
   } catch (error) {
     
