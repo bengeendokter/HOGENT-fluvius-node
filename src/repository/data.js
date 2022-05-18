@@ -129,7 +129,8 @@ const findCount = async () => {
     data =
     {
       jaar : compData[0].JAAR,
-      data : await getKnex()(tables.data).where('id',compData[0].ID).select('value','name').orderBy('name', 'asc')
+      data : await getKnex()(tables.data).where('id',compData[0].ID).select('value','name').orderBy('name', 'asc'),
+      doelwaarde : compData[0].DOELWAARDE
     }
   }
   return data;
@@ -151,7 +152,8 @@ const findCount = async () => {
     data =
     {
       jaar : compData[0].JAAR,
-      data : await getKnex()(tables.data).where('id',compData[0].ID).select('value','name').orderBy('name', 'asc')
+      data : await getKnex()(tables.data).where('id',compData[0].ID).select('value','name').orderBy('name', 'asc'),
+      doelwaarde : compData[0].DOELWAARDE
     }
   }
   return data;
@@ -171,7 +173,8 @@ const findCount = async () => {
     data[i] =
     {
       jaar : compData[i].JAAR,
-      data : await getKnex()(tables.data).where('id',compData[i].ID).select('value','name').orderBy('name', 'asc')
+      data : await getKnex()(tables.data).where('id',compData[i].ID).select('value','name').orderBy('name', 'asc'),
+      doelwaarde : compData[i].DOELWAARDE
     }
   }
   return data;
