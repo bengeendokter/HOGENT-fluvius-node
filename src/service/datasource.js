@@ -28,6 +28,24 @@ const debugLog = (message, meta = {}) => {
   };
 };
 
+/**
+ * Update an existing datasource
+ *
+ * @param {string} id - Id of the datasource to update.
+ * @param {object} datasource - The datasource to create.
+ * @param {boolean} datasource.CORRUPT - if category is visible
+ */
+ const updateById = async (id, { CORRUPT}) => {
+	debugLog(`Updating template with id ${id}`, {
+		CORRUPT
+	});
+
+ 	return templateRepository.updateById(id, {
+    CORRUPT
+	});
+};
+
 module.exports = {
-  getAll
+  getAll,
+  updateById
 };

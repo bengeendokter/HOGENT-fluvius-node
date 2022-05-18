@@ -27,7 +27,38 @@ const findCount = async () => {
   return count['count(*)'];
 };
 
+/**
+ * Update an existing datasource.
+ *
+ * @param {string} id - Id of the datasource to update.
+ * @param {object} datasource - The datasource to create.
+ * @param {boolean} datasource.CORRUPT - if category is visible
+ *
+ * @returns {Promise<object>} Updated datasource/**
+
+ */
+ const updateById = async (id, {
+  CORRUPT
+}) => {
+  try {
+    await getKnex()(tables.datasource)
+      .update({
+        CORRUPT
+      })
+      .where(`${tables.datasource}.id`, id);
+    return await findById(id);
+  } catch (error) {
+    
+    const logger = getChildLogger('datasource-repo');
+    logger.error('Error in updateById', {
+      error,
+    });
+    throw error;
+  }
+};
+
 module.exports = {
   findAll,
   findCount,
+  updateById,
 };

@@ -11,6 +11,15 @@ const getAlldatasources = async (ctx) => {
   ctx.body = datasources;
 };
 
+
+const updateDatasource = async (ctx) => {
+	ctx.body = await templateService.updateById(ctx.params.id, {
+		...ctx.request.body
+	}
+	);
+};
+
+
 /**
  * Install datasource routes in the given router.
  *
@@ -22,6 +31,7 @@ const getAlldatasources = async (ctx) => {
   });
 
   router.get('/',requireAuthentication, getAlldatasources);
+  router.put('/:id',requireAuthentication, updateDatasource);
 
   app
     .use(router.routes())
