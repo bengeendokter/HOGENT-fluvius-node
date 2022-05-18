@@ -81,9 +81,11 @@ const findCount = async () => {
  * @returns {Promise<object>} Created template
  */
  const create = async ({
-  categoryId,
+  category_id,
   rol,
-  isVisible,
+  is_visible,
+  order,
+  is_costumisable
 }) => {
 
   const exist = await findIsVisible(rol,categoryId);
@@ -98,9 +100,11 @@ const findCount = async () => {
     await getKnex()(tables.template)
       .insert({
         id,
-        category_id : categoryId,
+        category_id : category_id,
         rol,
-        is_visible: isVisible
+        is_visible: is_visible,
+        order : order,
+        is_costumisable : is_costumisable
       });
     return await findById(id);
   } catch (error) {

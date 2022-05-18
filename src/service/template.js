@@ -76,13 +76,15 @@ const debugLog = (message, meta = {}) => {
  * @param {string} template.rol - rol naam
  * @param {boolean} template.isVisible - if category is visible
  */
- const create = async ({ categoryId, rol, isVisible}) => {
-	debugLog('Creating new template', {  categoryId, rol, isVisible});
+ const create = async ({  category_id, rol, is_visible, order, is_costumisable}) => {
+	debugLog('Creating new template', {  category_id, rol, is_visible, order, is_costumisable});
 
 	return templateRepository.create({
-		categoryId,
+		category_id,
 		rol,
-		isVisible,
+		is_visible,
+    order,
+    is_costumisable
 	});
 };
 
