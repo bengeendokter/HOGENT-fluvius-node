@@ -4,7 +4,7 @@ module.exports = {
 		disabled: true,
 	},
 	cors: {
-		origins: ['http://localhost:3000'],
+		origins: ['https://mvo-fluvius.netlify.app/', 'http://localhost:3000'],
 		maxAge: 3 * 60 * 60,
 	},
 	database: {
