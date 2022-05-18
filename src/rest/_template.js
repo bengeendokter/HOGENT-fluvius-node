@@ -1,7 +1,7 @@
 
 const Router = require('@koa/router');
 const templateService = require('../service/template.js');
-const { requireAuthentication, makeRequireRole } = require('../core/auth.js');
+const { requireAuthentication } = require('../core/auth.js');
 const Role = require('../core/roles.js');
 
 const getAllTemplates = async (ctx) => {
@@ -58,14 +58,13 @@ const deleteTemplate = async (ctx) => {
     prefix: '/templates',
   });
 
-  const requireMvoCoordinator = makeRequireRole(Role.MVOCOORDINATOR);
 
   router.get('/',requireAuthentication, getAllTemplates);
   router.get('/rol/:naam',requireAuthentication, getAllTemplatesByRol);
   router.get('/rol/:naam/categorie/:id',requireAuthentication, getIsVisible);
-  router.post('/',requireAuthentication,requireMvoCoordinator, createTemplate);
-  router.put('/:id',requireAuthentication,requireMvoCoordinator, updateTemplate);
-  router.delete('/:id',requireAuthentication,requireMvoCoordinator, deleteTemplate);
+  router.post('/',requireAuthentication, createTemplate);
+  router.put('/:id',requireAuthentication, updateTemplate);
+  router.delete('/:id',requireAuthentication, deleteTemplate);
 
   app
     .use(router.routes())
