@@ -88,11 +88,11 @@ const findCount = async () => {
   is_costumisable
 }) => {
 
-  const exist = await findIsVisible(rol,categoryId);
+  const exist = await findIsVisible(rol,category_id);
   if(exist === true || exist === false)
   {
     console.log(exist);
-    throw new Error(`A template for rol ${rol} with category id ${categoryId} already exists`);
+    throw new Error(`A template for rol ${rol} with category id ${category_id} already exists`);
   }
 
   try {
