@@ -2,7 +2,7 @@
 ![Heroku](http://heroku-badge.herokuapp.com/?app=mvo-fluvius&root=api)
 
 ## Online versie
-Deze API draait online via heroku op `https://mvo-fluvius.herokuapp.com/api/`
+Deze API draait online via [heroku](https://mvo-fluvius.herokuapp.com/api/)
 
 Voor een JWT token te ontvangen stuurt men een `POST` inlog request naar `https://mvo-fluvius.herokuapp.com/api/users/login` met volgende body:
 ```
